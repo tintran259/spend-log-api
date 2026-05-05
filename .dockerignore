@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.*
+*.log
+docker-compose.yml
+README.md
+seed-*.sql
+seed-*.mjs
+scripts
