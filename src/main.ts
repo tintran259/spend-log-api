@@ -7,10 +7,6 @@ import helmet from 'helmet';
 const REQUIRED_ENV = [
   'JWT_ACCESS_SECRET',
   'JWT_REFRESH_SECRET',
-  'DB_HOST',
-  'DB_USERNAME',
-  'DB_PASSWORD',
-  'DB_NAME',
   'CLOUDINARY_CLOUD_NAME',
   'CLOUDINARY_API_KEY',
   'CLOUDINARY_API_SECRET',
@@ -18,10 +14,15 @@ const REQUIRED_ENV = [
   'MAIL_APP_PASSWORD',
 ];
 
+const DB_ENV = ['DB_HOST', 'DB_USERNAME', 'DB_PASSWORD', 'DB_NAME'];
+
 function validateEnv() {
   const missing = REQUIRED_ENV.filter(k => !process.env[k]);
-  if (missing.length) {
-    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+  // Accept either DATABASE_URL (Railway) or individual DB_* vars
+  const missingDb = process.env.DATABASE_URL ? [] : DB_ENV.filter(k => !process.env[k]);
+  const all = [...missing, ...missingDb];
+  if (all.length) {
+    throw new Error(`Missing required environment variables: ${all.join(', ')}`);
   }
 }
 
